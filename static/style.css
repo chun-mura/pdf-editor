@@ -1,0 +1,344 @@
+:root {
+  --desk: #d5cfc3;
+  --ink: #241f1b;
+  --paper: #f6f1e6;
+  --sheet: #fffdf8;
+  --rule: #8d8478;
+  --mark: #b6402c;
+  --quiet: #5e564e;
+  --radius: 2px;
+  color: var(--ink);
+  background: var(--desk);
+  font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+button, select, input, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  border: 1px solid var(--ink);
+  background: transparent;
+  border-radius: var(--radius);
+  min-height: 40px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 120ms ease;
+}
+
+button:active { transform: scale(0.98); }
+button:disabled:active { transform: none; }
+
+button kbd {
+  margin-left: 0.4rem;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--quiet);
+}
+
+button.solid kbd,
+.tool.is-on kbd { color: inherit; opacity: 0.72; }
+
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--mark);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+button.solid {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.mark {
+  width: 16px;
+  height: 16px;
+  color: var(--mark);
+  flex: none;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-wrap: balance;
+}
+
+.doc-name {
+  margin: 0;
+  flex: 1;
+  color: var(--quiet);
+  min-width: 6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history {
+  display: flex;
+  gap: 0.4rem;
+  flex: none;
+}
+
+.pager, .zoom {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: none;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.zoom select { width: auto; }
+
+.bar .solid { margin-left: auto; }
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  min-height: 0;
+}
+
+.stage {
+  overflow: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: safe center;
+  justify-content: safe center;
+  touch-action: manipulation;
+}
+
+body.is-dropping .stage {
+  box-shadow: inset 0 0 0 1px var(--mark);
+}
+
+.stage:focus { outline: none; }
+
+.empty {
+  align-self: start;
+  max-width: 28rem;
+  margin: 12vh 0 0 4vw;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.empty p { margin: 0 0 0.6rem; }
+.empty button { margin-top: 0.8rem; }
+
+.quiet {
+  color: var(--quiet);
+  font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+  font-size: 0.92rem;
+  text-wrap: pretty;
+}
+
+.sheet-wrap {
+  display: inline-block;
+  flex: none;
+}
+
+.sheet {
+  user-select: none;
+  position: relative;
+  background: var(--sheet);
+  box-shadow: 0 1px 0 rgba(36, 31, 27, 0.18), 8px 10px 0 rgba(36, 31, 27, 0.06);
+  cursor: crosshair;
+}
+
+.sheet img.page {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.item {
+  position: absolute;
+  touch-action: none;
+}
+
+.item.is-selected {
+  outline: 1px solid var(--mark);
+  outline-offset: 3px;
+}
+
+.item.rect {
+  background: #fff;
+  cursor: move;
+}
+
+.item.text {
+  cursor: move;
+}
+
+.item.text img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.baseline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1.2em;
+  border-bottom: 1px solid var(--mark);
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 0.9rem;
+  overflow: auto;
+}
+
+.tools { display: flex; gap: 0.4rem; margin-bottom: 0.8rem; }
+
+.mode-hint {
+  margin: 0 0 0.4rem;
+  min-height: 2.8rem;
+}
+
+.placed-label { margin: 1rem 0 0.35rem; }
+
+.placed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.placed button {
+  width: 100%;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.placed button.is-on {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.keys {
+  margin: auto 0 0;
+  padding-top: 1rem;
+}
+
+.tool.is-on {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+label.field {
+  display: block;
+  margin: 0.75rem 0;
+}
+
+label.field span {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--quiet);
+  margin-bottom: 0.25rem;
+}
+
+textarea, input[type="number"], select {
+  width: 100%;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--sheet);
+  padding: 0.4rem 0.5rem;
+}
+
+textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.size-row, .nudge {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.size-row input { width: 5.5rem; }
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.status {
+  margin: 0;
+  min-height: 1.6rem;
+  padding: 0.2rem 0.9rem 0.45rem;
+  color: var(--mark);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 800px) {
+  .workspace { grid-template-columns: 1fr; }
+  .side { border-left: 0; border-top: 1px solid var(--ink); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button { transition: none; }
+}
+
+@media (hover: hover) {
+  button:hover { background: rgba(36, 31, 27, 0.06); }
+  button.solid:hover, .tool.is-on:hover, .placed button.is-on:hover { background: var(--ink); }
+}

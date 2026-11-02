@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>載せる</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="bar">
+    <svg class="mark" viewBox="0 0 16 16" aria-hidden="true">
+      <circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1"></circle>
+      <path d="M8 1.5v13M1.5 8h13" fill="none" stroke="currentColor" stroke-width="1"></path>
+    </svg>
+    <h1>載せる</h1>
+    <button type="button" id="open">PDFを開く</button>
+    <input id="file" type="file" accept="application/pdf,.pdf" hidden>
+    <p id="doc-name" class="doc-name"></p>
+    <div class="pager" id="pager" hidden>
+      <button type="button" id="prev" aria-label="前のページ" disabled>前</button>
+      <span id="page-label"></span>
+      <button type="button" id="next" aria-label="次のページ" disabled>次</button>
+    </div>
+    <label class="zoom">
+      表示
+      <select id="zoom">
+        <option value="1">100%</option>
+        <option value="1.5" selected>150%</option>
+        <option value="2">200%</option>
+      </select>
+    </label>
+    <div class="history">
+      <button type="button" id="undo" aria-keyshortcuts="Meta+Z" disabled>戻す<kbd>⌘Z</kbd></button>
+      <button type="button" id="redo" aria-keyshortcuts="Meta+Shift+Z" disabled>やり直す<kbd>⇧⌘Z</kbd></button>
+    </div>
+    <button type="button" id="export" class="solid" disabled>書き出す</button>
+  </header>
+
+  <div class="workspace">
+    <div class="stage" id="stage" tabindex="0">
+      <div class="empty" id="empty">
+        <p>PDFを開いて、入りきらない文字を上から足す。</p>
+        <p class="quiet">元のPDFはそのまま残ります。</p>
+        <button type="button" id="open-empty" class="solid">PDFを開く</button>
+      </div>
+      <div class="sheet-wrap" id="sheet-wrap" hidden>
+        <div class="sheet" id="sheet"></div>
+      </div>
+    </div>
+    <aside class="side" id="side">
+      <div class="tools" role="group" aria-label="道具">
+        <button type="button" id="tool-text" class="tool is-on" aria-pressed="true" aria-keyshortcuts="T">文字<kbd>T</kbd></button>
+        <button type="button" id="tool-rect" class="tool" aria-pressed="false" aria-keyshortcuts="W">白で隠す<kbd>W</kbd></button>
+      </div>
+      <p id="mode-hint" class="mode-hint">クリックしたところが、1行目の左下です。</p>
+      <div id="inspector">
+        <p class="quiet">足した文字の内容と大きさは、ここで変えます。</p>
+      </div>
+      <div id="placed-wrap" hidden>
+        <p class="quiet placed-label">追加したもの</p>
+        <div id="placed" class="placed"></div>
+      </div>
+      <p class="quiet keys">矢印で 0.5 ポイント。Shift で 5。Delete で消す。</p>
+    </aside>
+  </div>
+  <p class="status" id="status" role="status"></p>
+  <script src="/static/app.js"></script>
+</body>
+</html>
